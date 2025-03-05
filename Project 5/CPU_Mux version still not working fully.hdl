@@ -1,0 +1,104 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/5/CPU.hdl
+/**
+ * The Hack Central Processing unit (CPU).
+ * Parses the binary code in the instruction input and executes it according to the
+ * Hack machine language specification. In the case of a C-instruction, computes the
+ * function specified by the instruction. If the instruction specifies to read a memory
+ * value, the inM input is expected to contain this value. If the instruction specifies
+ * to write a value to the memory, sets the outM output to this value, sets the addressM
+ * output to the target address, and asserts the writeM output (when writeM = 0, any
+ * value may appear in outM).
+ * If the reset input is 0, computes the address of the next instruction and sets the
+ * pc output to that value. If the reset input is 1, sets pc to 0.
+ * Note: The outM and writeM outputs are combinational: they are affected by the
+ * instruction's execution during the current cycle. The addressM and pc outputs are
+ * clocked: although they are affected by the instruction's execution, they commit to
+ * their new values only in the next cycle.
+ */
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+   //intruction handling///////////////////////
+   //A or C instruction type decided by Op code instruction last bit [15]
+   Not(in=instruction[15] , out=notIns );
+   Mux16(a=ALUout , b=instruction , sel=notIns , out=aorcinstruction );
+   //ARegister load decided by 1 [3] or 3rd [5] destination bit of instruction for now set as 3rd [5]
+   Or(a=notIns , b=instruction[5] , out=loadRA );
+   ARegister(in=aorcinstruction , load=loadRA , out=ARegout, out[0..14]=addressM );
+   //////////////////////////////////////////////////////////////////////////////
+
+   ///ALU operation///////////////////////////////////////////////////////////////////////////
+   //ALU Data inputs//
+
+   //Mux that decide between A register and M register (inM) contrled by a bit of instruction [12]
+   And(a=instruction[15] , b=instruction[12] , out=loadMorA );
+   Mux16(a=ARegout , b=inM , sel=loadMorA , out=ARegorMReg );
+
+   //DReg controlled by middle destination bit [4] if load value of ALU out or not
+   And(a=instruction[15] , b=instruction[4] , out=loadD );
+   DRegister(in=ALUout , load=loadD , out=DRegout );
+
+   //ALU x=DRegout y=ARegorMReg| controll bits defined by instruction as follows
+   // zx = [11] nx = [10] zy = [9] ny = [8] f = [7] no = [6] |if error maybe reversed
+   ALU(x=DRegout , y=ARegorMReg , zx=instruction[11] , nx=instruction[10] , zy=instruction[9] , ny=instruction[8] , f=instruction[7] , no=instruction[6] , out=outM, out=ALUout , zr=zrr , ng=ngg );
+
+   And(a=instruction[15] , b=instruction[3] , out=writeM );
+   ///////////////////////////////////////////////////////////////////////////////////////
+
+     //////////////////Jump condition calculated//////////////////////////////
+   //JGT | zr = 0 and ng = 0 than 1
+   Not(in=zrr , out=notzrr );
+   Not(in=ngg , out=notngg );
+   And(a=notzrr , b=notngg , out=JGT );
+
+   //JEQ | zr = 1
+   And(a=zrr , b=true , out=JEQ );
+
+   //JGE | ng = 0
+   And(a=notngg , b=true , out=JGE );
+
+   //JLT | ng = 1 and zr = 0
+   And(a=notzrr , b=ngg , out=JLT );
+
+   //JNE | zr=0
+   And(a=notzrr , b=true , out=JNE );
+
+   //JLE | ng=1 or zg = 0
+   Or(a=ngg , b=notzrr , out=or );
+   And(a=or , b=true , out=JLE );
+   
+   //Mux8way manually for only 1 bit
+    Mux(a=false , b=JGT , sel=instruction[0] , out=z );
+    Mux(a=JEQ , b=JGE , sel=instruction[0] , out=x );
+    Mux(a=JLT , b=JNE , sel=instruction[0] , out=v );
+    Mux(a=JLE , b=true , sel=instruction[0] , out=r );
+
+    Mux(a=z , b=x , sel=instruction[1] , out=zx );
+    Mux(a=v , b=r , sel=instruction[1] , out=vr );
+
+    Mux(a=zx , b=vr , sel=instruction[2] , out=jmpout );
+
+    
+   Mux(a=false , b=jmpout , sel=instruction[15] , out=aorc );
+   //if load = 1 than PC=A else PC++
+   PC(in=ARegout , load=aorc , inc=true , reset=reset , out[0..14]=pc );
+}   
+
+
+
+
+
