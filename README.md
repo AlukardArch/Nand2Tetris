@@ -1,9 +1,12 @@
 # Nand2Tetris
 Subobtimal and wacky - yet working
  
-Progress:                                                                                       
-  Project 1 - 100%                                                                              
-  Project 2 - 100%                                                                                
-  Project 3 - 100%                                                                                     
-  Project 4 - 100%                                                                                                                
-  Project 5 - 100%                                                                                                
+Progress: 
+ Part 1:                                                                                    
+   Project 1 - Finished                                                                             
+   Project 2 - Finished                                                                                
+   Project 3 - Finished                                                                                     
+   Project 4 - Finished                                                                                                                
+   Project 5 - Finished                                                                                                
+   Project 6 - Finished
+  
