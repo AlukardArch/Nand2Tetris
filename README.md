@@ -1,7 +1,7 @@
 # Nand2Tetris
 Subobtimal and wacky - yet working
  
-Progress: 
+Progress:                                                                                                                           
  Part 1:                                                                                    
    Project 1 - Finished                                                                             
    Project 2 - Finished                                                                                
