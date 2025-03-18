@@ -10,4 +10,4 @@ First delve into software
 * Project 3 - Finished
 * Project 4 - Finished
 * Project 5 - Finished
-* Project 6 - Finished
+* Project 6 - Finished(kinda) - Needs more work with handling labels
