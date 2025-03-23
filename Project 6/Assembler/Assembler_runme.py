@@ -9,7 +9,6 @@ with open("program.asm", "r") as file:
 
 #results of first passer stored as symbol table
 Symbol_table = first_pass(assembly_code)
-print(Symbol_table)
 
 #2nd pass to genertate code
 machine_code = machine_code_gen(assembly_code, Symbol_table)
