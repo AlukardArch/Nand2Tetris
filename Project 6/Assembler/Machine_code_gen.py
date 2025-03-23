@@ -13,7 +13,7 @@ def machine_code_gen(assembly_code, symbol_table):
                 continue #skip comments and emptyy lines
         
         #Skip label as we already handled them in first pass
-        if line.startswith("()") and line.endswith(")"):
+        if line.startswith("(") and line.endswith(")"):
             continue
         
         #if starts with "@" its instruction A else C
