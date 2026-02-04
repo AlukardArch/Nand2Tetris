@@ -7,9 +7,13 @@ def main():
         sys.exit(1)
     else:
         VMcode = getProgram(sys.argv[1])
+        for line in VMcode:  # itterate over each line
+            # if line is a comment or line is empty then skip
+            if line.startswith("//") or line == "":
+                continue
+            line = line.split()
         # to do:
-        # parser to split each line into ints components
-        # codeWriter on the results code from parser
+        # codeWriter on the resulting array from line processed
 
 
 def getProgram(filepath):
