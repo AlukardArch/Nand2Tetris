@@ -7,14 +7,19 @@ def main():
         print("Usage: python3 main.py <path_to_program.vm>")
         sys.exit(1)
     else:
-        outputFilename = "test" + ".asm"
+        outputFilename = sys.argv[1]
+        outputFilename = outputFilename.split("/")
+        Filename = outputFilename[-1]
+        Filename = Filename.split(".")
+        out = Filename[0] + ".asm"
+        # outputFilename = "test" + ".asm"
         with open(sys.argv[1], "r") as file:
             for line in file:  # itterate over each line
                 # if line is a comment or line is empty then skip
                 if line.startswith("//") or line == "":
-                    continue
+                    pass
                 asmCode = CodeWriter(line)
-                with open(outputFilename, "a") as f:
+                with open(out, "a") as f:
                     for asm in asmCode:
                         f.write(asm + "\n")
 
