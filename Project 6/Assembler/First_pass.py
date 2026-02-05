@@ -1,6 +1,5 @@
 def first_pass(assembly_code):
-
-#Table of known symbols
+    # Table of known symbols
     Symbol_table = {
         "SP": 0,
         "LCL": 1,
@@ -27,24 +26,22 @@ def first_pass(assembly_code):
         "KBD": 24576,
     }
 
-    address = 0 #Memory address counter
+    address = 0  # Memory address counter
 
-    for line in assembly_code: #iterate over each line in code
-        
-        #Remove whitespace and comments
-        #.strip removes whitespaces at the begining and end of a string
+    for line in assembly_code:  # iterate over each line in code
+        # Remove whitespace and comments
+        # .strip removes whitespaces at the begining and end of a string
         line = line.strip()
 
-        #if line is a comment or line is empty
+        # if line is a comment or line is empty
         if line.startswith("//") or line == "":
-            continue #makes a skip of comment or empty line
-
-        #checking if line a label: all labels have ()
+            # continue #makes a skip of comment or empty line
+            pass
+        # checking if line a label: all labels have ()
         if line.startswith("(") and line.endswith(")"):
-            label = line[1:-1] #Extract the label name
-            Symbol_table[label] = address #Add label to symbol table
+            label = line[1:-1]  # Extract the label name
+            Symbol_table[label] = address  # Add label to symbol table
         else:
-            address += 1 #Iterate further counter for A or C insturctions
-            
+            address += 1  # Iterate further counter for A or C insturctions
+
     return Symbol_table
-        

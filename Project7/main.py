@@ -15,13 +15,15 @@ def main():
         # outputFilename = "test" + ".asm"
         with open(sys.argv[1], "r") as file:
             for line in file:  # itterate over each line
-                # if line is a comment or line is empty then skip
-                if line.startswith("//") or line == "":
-                    pass
-                asmCode = CodeWriter(line)
-                with open(out, "a") as f:
-                    for asm in asmCode:
-                        f.write(asm + "\n")
+                if line.startswith("//"):
+                    line = ""
+                if line.strip():
+                    # if line.startswith("//"):
+                    # pass
+                    asmCode = CodeWriter(line)
+                    with open(out, "a") as f:
+                        for asm in asmCode:
+                            f.write(asm + "\n")
 
 
 main()

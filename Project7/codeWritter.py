@@ -7,7 +7,7 @@ def CodeWriter(line):
         "argument": "ARG",
         "this": "THIS",
         "that": "THAT",
-        "constant": "con",
+        "constant": "constant",
     }
     # load array of command
     if len(code) < 3:
@@ -37,11 +37,13 @@ def CodeWriter(line):
             code = 0
     # else its push or pop
     commandType = code[0]
-    dest = destTable[code[1]]
+    dest = code[1]
+    dst = destTable.get(dest)
+    dst = str(dst)
     i = code[2]
     # push (separate for constant)
     if commandType == "push":
-        if dest == "con":
+        if dst == "constant":
             code = [
                 "//push constant " + i,
                 "@" + i,
@@ -55,10 +57,10 @@ def CodeWriter(line):
             return code
         else:
             code = [
-                "//push " + line[1] + " " + i,
+                "//push " + dest + " " + i,
                 "@" + i,
                 "D=A",
-                "@" + dest,
+                "@" + dst,
                 "D=D+M",
                 "A=D",
                 "D=M",
@@ -72,20 +74,21 @@ def CodeWriter(line):
     # pop
     if commandType == "pop":
         code = [
-            "//pop " + line[1] + " " + i,
+            "//pop " + dest + " " + i,
             "@" + i,
             "D=A",
-            "@" + dest,
+            "@" + dst,
             "M=M+D",
             "@SP",
             "M=M-1",
             "A=M",
-            "D=M@" + dest,
+            "D=M",
+            "@" + dst,
             "A=M",
             "M=D",
             "@" + i,
             "D=A",
-            "@" + dest,
+            "@" + dst,
             "M=M-D",
         ]
         return code
