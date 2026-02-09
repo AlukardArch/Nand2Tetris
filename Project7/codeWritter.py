@@ -24,17 +24,104 @@ def CodeWriter(line):
             code = ["//neg", "@SP", "A=M-1", "M=-M"]
             return code
         elif commandType == "eq":
-            code = 0
+            code = [
+                "@SP",
+                "A=M-1",
+                "D=M",
+                "@SP",
+                "M=M-1",
+                "A=M-1",
+                "@TRUE",
+                "D;JEQ",
+                "@SP",
+                "A=M-1",
+                "M=0",
+                "@END",
+                "0;JMP",
+                "(TRUE)",
+                "@SP",
+                "A=M-1",
+                "M=-1",
+                "(END)",
+            ]
         elif commandType == "gt":
             code = 0
         elif commandType == "lt":
             code = 0
         elif commandType == "and":
-            code = 0
+            code = [
+                "@SP",
+                "A=M-1",
+                "D=1",
+                "D=D+M",
+                "@TRUE",
+                "D;JEQ",
+                "@SP",
+                "M=M-1",
+                "A=M-1",
+                "M=0",
+                "@END",
+                "0;JMP",
+                "(TRUE)",
+                "@SP",
+                "M=M-1",
+                "A=M-1",
+                "D=1",
+                "D=D+M",
+                "@TTRUE",
+                "D;JEQ",
+                "@SP",
+                "A=M-1",
+                "M=0",
+                "@END",
+                "0;JMP",
+                "(TTRUE)",
+                "@SP",
+                "A=M-1",
+                "M=-1",
+                "(END)",
+            ]
         elif commandType == "or":
-            code = 0
+            code = [
+                "@SP",
+                "A=M-1",
+                "D=1",
+                "D=D+M",
+                "@TRUE",
+                "D;JEQ",
+                "@SP",
+                "M=M-1",
+                "A=M-1",
+                "D=1",
+                "D=D+M",
+                "@TRUE",
+                "D;JEQ",
+                "@SP",
+                "A=M-1",
+                "M=0",
+                "@END",
+                "0;JMP",
+                "(TRUE)",
+                "@SP",
+                "A=M-1",
+            ]
         elif commandType == "not":
-            code = 0
+            code = [
+                "@SP",
+                "A=M-1",
+                "D=M",
+                "@FALSE",
+                "D;JEQ",
+                "M=0",
+                "@END",
+                "0;JMP",
+                "(FALSE)",
+                "@SP",
+                "A=M-1",
+                "M=-1",
+                "(END)",
+                "0;JMP",
+            ]
     # else its push or pop
     commandType = code[0]
     dest = code[1]
