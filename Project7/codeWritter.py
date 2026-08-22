@@ -44,10 +44,52 @@ def CodeWriter(line):
                 "M=-1",
                 "(END)",
             ]
+            return code
         elif commandType == "gt":
-            code = 0
+            code = [
+                "@SP",
+                "A=M-1",
+                "D=-M",
+                "@SP",
+                "M=M-1",
+                "A=M-1",
+                "D=D+M",
+                "@TRUE",
+                "D;JGT",
+                "@SP",
+                "A=M-1",
+                "@END",
+                "0;JMP",
+                "(TRUE)",
+                "@SP",
+                "A=M-1",
+                "M=-1",
+                "(END)",
+            ]
+            return code
         elif commandType == "lt":
-            code = 0
+            code = [
+                "@SP",
+                "A=M-1",
+                "D=-M",
+                "@SP",
+                "M=M-1",
+                "A=M-1",
+                "D=D+M",
+                "@TRUE",
+                "D;JLT",
+                "@SP",
+                "A=M-1",
+                "M=0",
+                "@END",
+                "0;JMP",
+                "(TRUE)",
+                "@SP",
+                "A=M-1",
+                "M=-1",
+                "(END)",
+            ]
+            return code
         elif commandType == "and":
             code = [
                 "@SP",
@@ -81,6 +123,7 @@ def CodeWriter(line):
                 "M=-1",
                 "(END)",
             ]
+            return code
         elif commandType == "or":
             code = [
                 "@SP",
@@ -105,6 +148,7 @@ def CodeWriter(line):
                 "@SP",
                 "A=M-1",
             ]
+            return code
         elif commandType == "not":
             code = [
                 "@SP",
@@ -122,6 +166,7 @@ def CodeWriter(line):
                 "(END)",
                 "0;JMP",
             ]
+            return code
     # else its push or pop
     commandType = code[0]
     dest = code[1]
