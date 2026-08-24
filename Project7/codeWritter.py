@@ -44,14 +44,14 @@ class CodeWriter:
             return ["//neg", "@SP", "A=M-1", "M=-M"]
         if command == "and":
             return [
-                "@SP", "AM=M-1", "D=M", "A=A-1", "D=D&M", "M=D",
+                "//and", "@SP", "AM=M-1", "D=M", "A=A-1", "D=D&M", "M=D"
             ]
         if command == "or":
             return [
-                "@SP", "AM=M-1", "D=M", "A=A-1", "D=D|M", "M=D",
+                "//or", "@SP", "AM=M-1", "D=M", "A=A-1", "D=D|M", "M=D"
             ]
         if command == "not":
-            return ["@SP", "A=M-1", "M=!M"]
+            return ["//not", "@SP", "A=M-1", "M=!M"]
         if command in {"eq", "gt", "lt"}:
             return self._write_comparison(command)
         raise ValueError(f"Unknown arithmetic command: {command}")
@@ -64,10 +64,11 @@ class CodeWriter:
         first_value = "D=M" if command == "eq" else "D=-M"
         combine_values = "D=D-M" if command == "eq" else "D=D+M"
         return [
+            f"//{command}",
             "@SP", "A=M-1", first_value, "@SP", "M=M-1", "A=M-1", combine_values,
             "@" + true_label, "D;" + jump, "@SP", "A=M-1", "M=0",
             "@" + end_label, "0;JMP", "(" + true_label + ")", "@SP", "A=M-1",
-            "M=-1", "(" + end_label + ")",
+            "M=-1", "(" + end_label + ")"
         ]
 
     def write_push(self, segment, index):
