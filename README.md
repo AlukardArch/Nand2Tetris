@@ -24,4 +24,7 @@ My first delve into software. This repository contains my own, somewhat working 
 * #### Project 6 : Completed
 	* Developing a 2-pass assembler in Python.
 
+* #### Project 7 : Completed
+	* Developing a VM translator Part 1.
+
 * #### To be continued...
